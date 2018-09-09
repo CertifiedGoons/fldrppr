@@ -2,6 +2,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const ejs = require('ejs');
+const path = require('path');
+const multer = require('multer');
 
 const app = express();
 
@@ -9,11 +11,16 @@ const app = express();
 dotenv.config();
 
 app.use('/public', express.static('public'))
+app.use('/public/dist', express.static('bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-// Global consts
+// Global variables
 const PORT = process.env.PORT || 8080;
+const config = require(path.join(__dirname, '..', 'config.json'));
+
+let memStorage = multer.memoryStorage();
+let upload = multer({ storage: memStorage });
 
 // Port listen
 app.listen(PORT, () => {
@@ -22,9 +29,14 @@ app.listen(PORT, () => {
 
 // Routes
 app.get('/', (req, res) => {
-        res.render('home');
+        return res.render('home');
 });
 
 app.get('/upload', (req, res) => {
-        res.render('upload');
+        return res.render('upload', {dropzoneConfig: config.dropzone});
+});
+
+app.post('/file-upload', upload.single('file'), (req, res) => {
+        console.log(req.file);
+        return res.status(200).send('Success');
 });

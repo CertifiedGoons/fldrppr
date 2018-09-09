@@ -2,10 +2,18 @@
 <html lang="en">
 <head>
     <% include partials/head %>
+    <link type="text/css" rel="stylesheet" href="/public/dist/dropzone/dist/min/dropzone.min.css">
 </head>
 <body class="container">
 
-GET: /upload
+    <form action="/file-upload"
+    class="dropzone"
+    id="upload-zone"></form>
 
+    <!-- Scripts -->
+    <script>
+        Dropzone.options.uploadZone = <%- dropzoneConfig %>
+    </script>
+    <script src="/public/dist/dropzone/dist/min/dropzone.min.js"></script>
 </body>
 </html>

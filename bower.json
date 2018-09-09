@@ -1,0 +1,21 @@
+{
+  "name": "fldrppr",
+  "description": "Upload / Download files using http",
+  "main": "index.js",
+  "authors": [
+    "link00000000 <crandall.logan@gmail.com>"
+  ],
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/CertifiedGoons/fldrppr",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "dropzone": "^5.5.0",
+    "bulma": "^0.7.1"
+  }
+}

@@ -1,0 +1,7 @@
+{
+    "dropzone": {
+        "paramName": "file",
+        "maxFileSize": 1000,
+        "dictDefaultMessage": "Drag an image here to upload, or click to select one"
+    }
+}
