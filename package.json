@@ -21,6 +21,7 @@
     "nodemon": "^1.18.4"
   },
   "dependencies": {
+    "dotenv": "^6.0.0",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "express-validator": "^5.3.0",
