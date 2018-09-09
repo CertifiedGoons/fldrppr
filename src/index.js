@@ -8,6 +8,7 @@ const mongojs = require('mongojs');
 
 // Initialization
 const app = express();
+
 let db = mongojs('fldrppr', ['users']);
 
 dotenv.config();

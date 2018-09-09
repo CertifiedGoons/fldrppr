@@ -3,17 +3,21 @@
 <head>
     <% include partials/head %>
     <link type="text/css" rel="stylesheet" href="/public/dist/dropzone/dist/min/dropzone.min.css">
+    <link type="text/css" rel="stylesheet" href="/public/css/upload.css"
 </head>
 <body class="container">
 
-    <form action="/file-upload"
-    class="dropzone"
-    id="upload-zone"></form>
+    <form action="/file-upload" class="dropzone" id="upload-zone">
+        <div class="dz-message" data-dz-message><span>Drop files here or click to upload</span></div>
+    </form>
 
     <!-- Scripts -->
-    <script>
-        Dropzone.options.uploadZone = <%- dropzoneConfig %>
-    </script>
     <script src="/public/dist/dropzone/dist/min/dropzone.min.js"></script>
+        <script>
+        // Dropzone.options.uploadZone = <%- dropzoneConfig %>;
+        Dropzone.options.uploadZone = {
+            dictDefaultMessage = "This is a test"
+        };
+    </script>
 </body>
 </html>
