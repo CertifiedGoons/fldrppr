@@ -4,10 +4,12 @@ const dotenv = require('dotenv');
 const ejs = require('ejs');
 const path = require('path');
 const multer = require('multer');
-
-const app = express();
+const mongojs = require('mongojs');
 
 // Initialization
+const app = express();
+let db = mongojs('fldrppr', ['users']);
+
 dotenv.config();
 
 app.use('/public', express.static('public'))
@@ -40,3 +42,12 @@ app.post('/file-upload', upload.single('file'), (req, res) => {
         console.log(req.file);
         return res.status(200).send('Success');
 });
+
+// Database Checking Debug
+app.get('/monGOD', (req, res) => {
+        db.users.find(function (err, docs) {
+                if(err) throw err;
+                console.log(docs);
+                res.send(docs[0].email);
+        })
+})
