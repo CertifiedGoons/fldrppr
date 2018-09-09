@@ -3,13 +3,17 @@
 <head>
     <% include partials/head %>
     <link type="text/css" rel="stylesheet" href="/public/dist/dropzone/dist/min/dropzone.min.css">
-    <link type="text/css" rel="stylesheet" href="/public/css/upload.css"
+    <link type="text/css" rel="stylesheet" href="/public/css/upload.css">
 </head>
-<body class="container">
-
-    <form action="/file-upload" class="dropzone" id="upload-zone">
-        <div class="dz-message" data-dz-message><span>Drop files here or click to upload</span></div>
-    </form>
+<body>
+    <% include partials/navbar %>
+    <div class="container">
+        <h4 class="subtitle is-4">Upload files</h4>
+        <form action="/file-upload" class="dropzone" id="upload-zone">
+            <div class="dz-message" data-dz-message><span>Drop files here or click to upload</span></div>
+        </form>
+    </div>
+    <% include partials/footer %>
 
     <!-- Scripts -->
     <script src="/public/dist/dropzone/dist/min/dropzone.min.js"></script>

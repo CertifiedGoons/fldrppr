@@ -1,0 +1,38 @@
+<link type="text/css" rel="stylesheet" href="/public/css/partials/navbar.css">
+
+<nav class="navbar is-white" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="/public/assets/fldrppr_logo.svg" alt="Fldrppr: upload / download files using http" width="112"
+                height="28">
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" id="nav-toggle">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu" id="nav-menu">
+        <div class="navbar-start">
+            <a href="/" class="navbar-item">Home</a>
+            <a href="/upload" class="navbar-item">Upload</a>
+        </div>
+        <div class="navbar-end">
+            <a href="/login" class="navbar-item">Login</a>
+            <a href="/signup" class="navbar-item has-text-primary">Sign Up</a>
+        </div>
+    </div>
+</nav>
+
+<script>
+    document.getElementById("nav-toggle").addEventListener ("click", toggleNav);
+    function toggleNav() {
+            var nav = document.getElementById("nav-menu");
+            var className = nav.getAttribute("class");
+            if(!className.includes('is-active')) {
+                nav.className += ' is-active';
+            } else {
+                nav.className = nav.className.replace('is-active', '').trim();
+            }
+    }
+</script>

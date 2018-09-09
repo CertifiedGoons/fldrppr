@@ -23,32 +23,36 @@ const PORT = process.env.PORT || 8080;
 const config = require(path.join(__dirname, '..', 'config.json'));
 
 let memStorage = multer.memoryStorage();
-let upload = multer({ storage: memStorage });
+let upload = multer({
+    storage: memStorage
+});
 
 // Port listen
 app.listen(PORT, () => {
-        console.log('Listening on port ' + PORT + ' :D')
+    console.log('Listening on port ' + PORT + ' :D')
 });
 
 // Routes
 app.get('/', (req, res) => {
-        return res.render('home');
+    return res.render('home');
 });
 
 app.get('/upload', (req, res) => {
-        return res.render('upload', {dropzoneConfig: config.dropzone});
+    return res.render('upload', {
+        dropzoneConfig: config.dropzone
+    });
 });
 
 app.post('/file-upload', upload.single('file'), (req, res) => {
-        console.log(req.file);
-        return res.status(200).send('Success');
+    console.log(req.file);
+    return res.status(200).send('Success');
 });
 
 // Database Checking Debug
 app.get('/monGOD', (req, res) => {
-        db.users.find(function (err, docs) {
-                if(err) throw err;
-                console.log(docs);
-                res.send(docs[0].email);
-        })
+    db.users.find(function (err, docs) {
+        if (err) throw err;
+        console.log(docs);
+        res.send(docs[0].email);
+    })
 })
