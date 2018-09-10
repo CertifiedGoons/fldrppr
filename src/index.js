@@ -65,10 +65,9 @@ app.get('/users-list', (req, res) => {
         res.send(JSON.stringify(docs));
     });
 });
-/*
+
 // Upload page back-end
 app.post('/file-upload', upload.single('file'), (req, res) => {
     console.log(req.file);
     return res.status(200).send('Success');
 });
-*/
