@@ -2,11 +2,58 @@
 <html lang="en">
 <head>
     <% include partials/head %>
-    
+    <link type="text/css" rel="stylesheet" href="/public/css/home.css">
 </head>
-<body class="container">
+<body>
+    <% include partials/navbar %>
 
-Hello World!
+    <!-- Hero Section -->
+    <section class="hero is-primary is-medium">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Fldrppr
+                </h1>
+                <h2 class="subtitle">
+                    Upload and download files using http
+                </h2>
+            </div>
+        </div>
+    </section>
 
+    <!-- Button Group Section -->
+    <section>
+        <div class="container">
+            <div class="title btn-title is-4">Start sharing files now</div>
+            <div class="field is-grouped is-centered">
+                <p class="control">
+                    <a class="button is-link is-medium" href="/signup">
+                        Create an Account
+                    </a>
+                </p>
+                <p class="control">
+                    <a class="button is-medium" href="/login">
+                        Login
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Github Section -->
+    <section class="hero is-dark">
+        <div class="hero-body">
+            <div class="container">
+                <div class="title">
+                    This project is on GitHub.
+                </div>
+                <div class="subtitle">
+                    Like this project and want to contribute? <a href="https://www.github.com/CertifiedGoons/fldrppr">Click here</a> Fork us on GitHub!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <% include partials/footer %>
 </body>
 </html>
