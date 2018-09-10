@@ -10,14 +10,13 @@ const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
 const { check, validationResult, body } = require('express-validator/check');
 let bcrypt = require('bcrypt');
+
 /*
  * Start Initialization
  */
  
  // Express
 const app = express();
-//const check = expressValidator.check;
-//const validationResult = expressValidator.validationResult;
 app.use('/public', express.static('public'))
 app.use('/public/dist', express.static('bower_components'));
 app.set('view engine', 'ejs');
@@ -104,46 +103,38 @@ app.post('/signup', [
     // Validation
     check('username')
         .isLength({ min: 1 })
-       .withMessage('Name is required.'),
+        .withMessage('Name is required.'),
     check('email')
 		.isLength({ min: 1 })
 		.withMessage('Email is required.')
-		.isEmail().withMessage('Please provide a valid email address'),
+        .isEmail().withMessage('Please provide a valid email address'),
     check('password')
 		.isLength({ min: 1 })
 		.withMessage('Password is required.'),
     check('password-confirm')
         .isLength({ min: 1 })
         .withMessage('Confirm password is required.')
-        .equals('password')
+        .matches('password')
         .withMessage('Passwords must match.')
   ],
-    // checking password confirm is same as password
-    /*
-    body('password-confirm').custom((value, { req }) => {
-    if (value !== req.body.password) {
-      throw new Error('Password confirmation does not match password');
-    }
-    })
-    */
     (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
-     }
-    else {
-        // Using highly superior mongoose
-        let newUser = new User({
-            username:req.body.username,
-            email:req.body.email,
-            password:req.body.password,
-        });
-        newUser.save(function(err,data){
-            if(err) console.log(err);
-            else console.log('Success:', data);
-        });
-    }
-    res.status(200).send();
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+        else {
+            // Using highly superior mongoose
+            let newUser = new User({
+                username:req.body.username,
+                email:req.body.email,
+                password:req.body.password,
+            });
+            newUser.save(function(err,data){
+                if(err) console.log(err);
+                else console.log('Success:', data);
+            });
+        }
+        res.status(200).send();
 });
 
 // Upload page back-end
