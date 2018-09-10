@@ -4,12 +4,12 @@ const dotenv = require('dotenv');
 const ejs = require('ejs');
 const path = require('path');
 const multer = require('multer');
-const mongojs = require('mongojs');
 const mongoose = require('mongoose');
 const gridFsStorage = require('multer-gridfs-storage');
 const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult, body } = require('express-validator/check');
+let bcrypt = require('bcrypt');
 /*
  * Start Initialization
  */
@@ -32,7 +32,6 @@ const storage = new gridFsStorage({
     file: () => { return  { bucketName: 'uploaded' } }
 });
 let upload = multer({ storage: storage });
-//var db = mongojs('fldrppr', ['users']);
 mongoose.connect('mongodb://localhost:27017/fldrppr');
 let db = mongoose.connection;
 db.on('error', function(err){
@@ -50,6 +49,23 @@ let newUserSchema = new Schema({
     password:String
 });
 let User = mongoose.model('User', newUserSchema);
+const SALT_WORK_FACTOR = 10;
+// this is where the hash in the password is set up
+newUserSchema.pre('save', function(next){
+    var user = this;
+    if (!user.isModified('password')) return next();
+ 
+    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt){
+        if(err) return next(err);
+ 
+        bcrypt.hash(user.password, salt, function(err, hash){
+            if(err) return next(err);
+ 
+            user.password = hash;
+            next();
+        });
+    });
+});
 
 // DotEnv
 dotenv.config();
@@ -85,15 +101,32 @@ app.get('/signup', (req, res) => {
 
 // Sign up Page back-end
 app.post('/signup', [
-    // username must typed
-    check('username').not().isEmpty(),
-    // email is email
-    check('email').isEmail(),
-    // password must be at least 5 chars long
-    check('password').isLength({ min: 5 }),
+    // Validation
+    check('username')
+        .isLength({ min: 1 })
+       .withMessage('Name is required.'),
+    check('email')
+		.isLength({ min: 1 })
+		.withMessage('Email is required.')
+		.isEmail().withMessage('Please provide a valid email address'),
+    check('password')
+		.isLength({ min: 1 })
+		.withMessage('Password is required.'),
+    check('password-confirm')
+        .isLength({ min: 1 })
+        .withMessage('Confirm password is required.')
+        .equals('password')
+        .withMessage('Passwords must match.')
+  ],
     // checking password confirm is same as password
-    check('password-confirm').custom('password')
-  ], (req, res) => {
+    /*
+    body('password-confirm').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Password confirmation does not match password');
+    }
+    })
+    */
+    (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
@@ -103,30 +136,12 @@ app.post('/signup', [
         let newUser = new User({
             username:req.body.username,
             email:req.body.email,
-            password:req.body.password
+            password:req.body.password,
         });
         newUser.save(function(err,data){
-            if(err) console.log(error);
+            if(err) console.log(err);
             else console.log('Success:', data);
         });
-
-
-        /* Using shitty mongojs
-        *
-        let newUser = {
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password
-        }
-        
-        db.users.insert(newUser, function(err, res){
-            if(err){
-                console.log(err);
-            }
-            
-        });
-        *
-        */
     }
     res.status(200).send();
 });
