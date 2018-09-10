@@ -114,7 +114,7 @@ app.post('/signup', [
     check('password-confirm')
         .isLength({ min: 1 })
         .withMessage('Confirm password is required.')
-        .matches('password')
+        .matches(body.password)
         .withMessage('Passwords must match.')
   ],
     (req, res) => {
