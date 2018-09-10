@@ -50,6 +50,10 @@ app.get('/upload', (req, res) => {
     });
 });
 
+app.get('/signup', (req, res) => {
+    return res.render('signup');
+});
+
 // Sign up Page back-end
 app.post('/signup', (req, res) => {
 
