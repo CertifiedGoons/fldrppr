@@ -5,15 +5,29 @@ const ejs = require('ejs');
 const path = require('path');
 const multer = require('multer');
 const mongojs = require('mongojs');
+const mongoose = require('mongoose');
+const gridFsStorage = require('multer-gridfs-storage');
 
-// Initialization
+/*
+ * Initialization
+ */
+ // Express
 const app = express();
-let db = mongojs('fldrppr', ['users']);
-dotenv.config();
 app.use('/public', express.static('public'))
 app.use('/public/dist', express.static('bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', 'views');
+
+// MongoDB
+const mongoConnection = mongoose.connect('mongodb://localhost:27017/fldrppr');
+const storage = new gridFsStorage({
+    db: mongoConnection,
+    file: () => { return  { bucketName: 'uploaded' } }
+});
+let upload = multer({ storage: storage });
+
+// DotEnv
+dotenv.config();
 
 // Global variables
 const PORT = process.env.PORT || 8080;
