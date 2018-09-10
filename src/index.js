@@ -32,7 +32,24 @@ const storage = new gridFsStorage({
     file: () => { return  { bucketName: 'uploaded' } }
 });
 let upload = multer({ storage: storage });
-var db = mongojs('fldrppr', ['users']);
+//var db = mongojs('fldrppr', ['users']);
+mongoose.connect('mongodb://localhost:27017/fldrppr');
+let db = mongoose.connection;
+db.on('error', function(err){
+    console.log('conneciton error', err);
+});
+db.once('open', function(err){
+    console.log('Connection to DB successful');
+});
+
+// Schema
+let Schema = mongoose.Schema;
+let newUserSchema = new Schema({
+    username:String,
+    email:String,
+    password:String
+});
+let User = mongoose.model('User', newUserSchema);
 
 // DotEnv
 dotenv.config();
@@ -73,13 +90,29 @@ app.post('/signup', [
     // email is email
     check('email').isEmail(),
     // password must be at least 5 chars long
-    check('password').isLength({ min: 5 })
+    check('password').isLength({ min: 5 }),
+    // checking password confirm is same as password
+    check('password-confirm').custom('password')
   ], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
      }
     else {
+        // Using highly superior mongoose
+        let newUser = new User({
+            username:req.body.username,
+            email:req.body.email,
+            password:req.body.password
+        });
+        newUser.save(function(err,data){
+            if(err) console.log(error);
+            else console.log('Success:', data);
+        });
+
+
+        /* Using shitty mongojs
+        *
         let newUser = {
             username: req.body.username,
             email: req.body.email,
@@ -92,9 +125,12 @@ app.post('/signup', [
             }
             
         });
+        *
+        */
     }
     res.status(200).send();
 });
+
 // Upload page back-end
 app.post('/file-upload', upload.single('file'), (req, res) => {
     console.log(req.file);
