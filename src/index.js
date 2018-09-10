@@ -9,15 +9,15 @@ const mongoose = require('mongoose');
 const gridFsStorage = require('multer-gridfs-storage');
 const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
-
+const { check, validationResult } = require('express-validator/check');
 /*
  * Start Initialization
  */
  
  // Express
 const app = express();
-const check = expressValidator.check;
-const validationResult = expressValidator.validationResult;
+//const check = expressValidator.check;
+//const validationResult = expressValidator.validationResult;
 app.use('/public', express.static('public'))
 app.use('/public/dist', express.static('bower_components'));
 app.set('view engine', 'ejs');
@@ -32,6 +32,7 @@ const storage = new gridFsStorage({
     file: () => { return  { bucketName: 'uploaded' } }
 });
 let upload = multer({ storage: storage });
+var db = mongojs('fldrppr', ['users']);
 
 // DotEnv
 dotenv.config();
@@ -66,24 +67,32 @@ app.get('/signup', (req, res) => {
 });
 
 // Sign up Page back-end
-app.post('/signup', (req, res) => {
-    req.checkBody('username', 'Username is Required').notEmpty();
-    req.checkBody('email', 'Email is Required').notEmpty();
-    req.checkBody('password', 'Password is Required').notEmpty();
-
-    let errors = req.validationErrors();
-
-    if(errors){
-
-    } else {
+app.post('/signup', [
+    // username must typed
+    check('username').not().isEmpty(),
+    // email is email
+    check('email').isEmail(),
+    // password must be at least 5 chars long
+    check('password').isLength({ min: 5 })
+  ], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+     }
+    else {
         let newUser = {
             username: req.body.username,
             email: req.body.email,
             password: req.body.password
         }
+        
+        db.users.insert(newUser, function(err, res){
+            if(err){
+                console.log(err);
+            }
+            
+        });
     }
-
-    
     res.status(200).send();
 });
 // Upload page back-end
