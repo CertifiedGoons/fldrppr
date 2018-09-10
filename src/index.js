@@ -5,12 +5,9 @@ const ejs = require('ejs');
 const path = require('path');
 const multer = require('multer');
 const mongojs = require('mongojs');
-<<<<<<< HEAD
 const mongoose = require('mongoose');
 const gridFsStorage = require('multer-gridfs-storage');
-=======
 const expressValidator = require('express-validator');
->>>>>>> e67501baa6a275bca8e62f5d0db793a5021e41fb
 
 /*
  * Initialization
