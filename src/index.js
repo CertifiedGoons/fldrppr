@@ -5,8 +5,12 @@ const ejs = require('ejs');
 const path = require('path');
 const multer = require('multer');
 const mongojs = require('mongojs');
+<<<<<<< HEAD
 const mongoose = require('mongoose');
 const gridFsStorage = require('multer-gridfs-storage');
+=======
+const expressValidator = require('express-validator');
+>>>>>>> e67501baa6a275bca8e62f5d0db793a5021e41fb
 
 /*
  * Initialization
@@ -49,7 +53,25 @@ app.get('/upload', (req, res) => {
     });
 });
 
+// Sign up Page back-end
+app.post('/signup', (req, res) => {
+
+    let newUser = {
+        userName: req.body.userName,
+        passwd: req.body.passwd,
+        email: req.body.email
+    }
+});
+
+app.get('/users-list', (req, res) => {
+    db.users.find( (err, docs) =>{
+        res.send(JSON.stringify(docs));
+    });
+});
+/*
+// Upload page back-end
 app.post('/file-upload', upload.single('file'), (req, res) => {
     console.log(req.file);
     return res.status(200).send('Success');
 });
+*/
