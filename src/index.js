@@ -39,7 +39,7 @@ app.listen(PORT, () => {
     console.log('Listening on port ' + PORT + ' :D')
 });
 
-// Routes
+// Routes - get
 app.get('/', (req, res) => {
     return res.render('home');
 });
@@ -63,15 +63,11 @@ app.post('/signup', (req, res) => {
         email: req.body.email
     }
 });
-
-app.get('/users-list', (req, res) => {
-    db.users.find( (err, docs) =>{
-        res.send(JSON.stringify(docs));
-    });
-});
-
 // Upload page back-end
 app.post('/file-upload', upload.single('file'), (req, res) => {
     console.log(req.file);
+
+    // Insert code to add fileID to user array
+
     return res.status(200).send('Success');
 });
