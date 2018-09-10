@@ -5,6 +5,7 @@ const ejs = require('ejs');
 const path = require('path');
 const multer = require('multer');
 const mongojs = require('mongojs');
+const expressValidator = require('express-validator');
 
 // Initialization
 const app = express();
@@ -35,7 +36,25 @@ app.get('/upload', (req, res) => {
     });
 });
 
+// Sign up Page back-end
+app.post('/signup', (req, res) => {
+
+    let newUser = {
+        userName: req.body.userName,
+        passwd: req.body.passwd,
+        email: req.body.email
+    }
+});
+
+app.get('/users-list', (req, res) => {
+    db.users.find( (err, docs) =>{
+        res.send(JSON.stringify(docs));
+    });
+});
+/*
+// Upload page back-end
 app.post('/file-upload', upload.single('file'), (req, res) => {
     console.log(req.file);
     return res.status(200).send('Success');
 });
+*/
