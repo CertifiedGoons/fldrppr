@@ -92,6 +92,10 @@ app.get('/upload', (req, res) => {
     });
 });
 
+app.get('/login', (req, res) => {
+    return res.render('login');
+});
+
 app.get('/signup', (req, res) => {
     return res.render('signup');
 });

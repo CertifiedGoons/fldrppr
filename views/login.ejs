@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include partials/head %>
+</head>
+<body>
+    <% include partials/navbar %>
+
+    <form action="/login" method="POST">
+        Username or Email:       <input type="text" name="user" /><br>
+        Password:       <input type="password" name="password" /><br>
+        <input type="submit" value="Submit" />
+    </form>
+
+    <% include partials/footer %>
+</body>
+</html>
