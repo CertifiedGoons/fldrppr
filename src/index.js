@@ -25,14 +25,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 // MongoDB
-const mongoConnection = mongoose.connect('mongodb://localhost:27017/fldrppr');
+const db = mongoose.connect('mongodb://localhost:27017/fldrppr');
 const storage = new gridFsStorage({
-    db: mongoConnection,
+    db: db,
     file: () => { return  { bucketName: 'uploaded' } }
 });
 let upload = multer({ storage: storage });
-mongoose.connect('mongodb://localhost:27017/fldrppr');
-let db = mongoose.connection;
 db.on('error', function(err){
     console.log('conneciton error', err);
 });
@@ -41,14 +39,14 @@ db.once('open', function(err){
 });
 
 // Schema
-let Schema = mongoose.Schema;
-let newUserSchema = new Schema({
-    username:String,
-    email:String,
-    password:String
+let newUserSchema = new mongoose.Schema({
+    username: String,
+    email: String,
+    password: String
 });
-let User = mongoose.model('User', newUserSchema);
+mongoose.model('User', newUserSchema);
 const SALT_WORK_FACTOR = 10;
+
 // this is where the hash in the password is set up
 newUserSchema.pre('save', function(next){
     var user = this;
