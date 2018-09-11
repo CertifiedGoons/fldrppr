@@ -25,16 +25,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 // MongoDB
-const db = mongoose.connect('mongodb://localhost:27017/fldrppr');
 const storage = new gridFsStorage({
-    db: db,
+    db: mongoose.connect('mongodb://localhost:27017/fldrppr'),
     file: () => { return  { bucketName: 'uploaded' } }
 });
 let upload = multer({ storage: storage });
-db.on('error', function(err){
+mongoose.connection.on('error', function(err){
     console.log('conneciton error', err);
 });
-db.once('open', function(err){
+mongoose.connection.once('open', function(err){
     console.log('Connection to DB successful');
 });
 
