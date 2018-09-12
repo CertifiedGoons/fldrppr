@@ -8,6 +8,7 @@ const gridFsStorage = require('multer-gridfs-storage');
 const bodyParser = require('body-parser');
 const { check, validationResult, body } = require('express-validator/check');
 let bcrypt = require('bcrypt');
+let session = require('express-session');
 
 /*
  * Start Initialization
@@ -21,6 +22,12 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+//use sessions for tracking logins
+app.use(session({
+    secret: 'logbob',
+    resave: true,
+    saveUninitialized: false
+}));
 
 // MongoDB
 const storage = new gridFsStorage({
@@ -46,6 +53,7 @@ let newUserSchema = new mongoose.Schema({
     loginAttempts: { type: Number, required: true, default: 0 },
     lockUntil: { type: Number }
 });
+let User = mongoose.model('User', newUserSchema);
 newUserSchema.statics.failedLogin = {
     NOT_FOUND: 0,
     PASSWORD_INCORRECT: 1,
@@ -77,7 +85,6 @@ newUserSchema.methods.incLoginAttempts = function(cb) {
     }
     return this.update(updates, cb);
 };
-let User = mongoose.model('User', newUserSchema);
 const SALT_WORK_FACTOR = 10;
 // this is where the hash in the password is set up
 newUserSchema.pre('save', function(next){
@@ -96,7 +103,7 @@ newUserSchema.pre('save', function(next){
     });
 });
 // takes username and password, returns a cb if its authenticatetd or not
-newUserSchema.statics.getAuthenticated = function(username, password, cb) {
+newUserSchema.static('authenticate', function (username, password, cb) {
     this.findOne({ username: username }, function(err, user) {
         if (err) return cb(err);
 
@@ -140,7 +147,8 @@ newUserSchema.statics.getAuthenticated = function(username, password, cb) {
             });
         });
     });
-};
+});
+module.exports = mongoose.model('User', newUserSchema);
 /*
  *  End Schema
  */
@@ -210,7 +218,7 @@ app.post('/login', (req, res) =>{
     // login code here
     // s/o to jmar777 @ http://devsmash.com/blog/implementing-max-login-attempts-with-mongoose
     // attempt to authenticate user
-    User.getAuthenticated(body.Username, body.Password, function(err, user, reason) {
+    User.authenticate(body.Username, body.Password, function(err, user, reason) {
         if (err) throw err;
 
         // login was successful if we have a user
