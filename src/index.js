@@ -1,12 +1,10 @@
 // Dependencies
 const express = require('express');
 const dotenv = require('dotenv');
-const ejs = require('ejs');
 const path = require('path');
 const multer = require('multer');
 const mongoose = require('mongoose');
 const gridFsStorage = require('multer-gridfs-storage');
-const expressValidator = require('express-validator');
 const bodyParser = require('body-parser');
 const { check, validationResult, body } = require('express-validator/check');
 let bcrypt = require('bcrypt');
@@ -43,7 +41,7 @@ let newUserSchema = new mongoose.Schema({
     email: String,
     password: String
 });
-mongoose.model('User', newUserSchema);
+let User = mongoose.model('User', newUserSchema);
 const SALT_WORK_FACTOR = 10;
 
 // this is where the hash in the password is set up
@@ -99,43 +97,18 @@ app.get('/signup', (req, res) => {
     return res.render('signup');
 });
 
-// Sign up Page back-end
 app.post('/signup', [
-    // Validation
-    check('username')
-        .isLength({ min: 1 })
-        .withMessage('Name is required.'),
-    check('email')
-		.isLength({ min: 1 })
-		.withMessage('Email is required.')
-        .isEmail().withMessage('Please provide a valid email address'),
-    check('password')
-		.isLength({ min: 1 })
-		.withMessage('Password is required.'),
-    check('password-confirm')
-        .isLength({ min: 1 })
-        .withMessage('Confirm password is required.')
-        .matches(body.password)
-        .withMessage('Passwords must match.')
-  ],
-    (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
-        }
-        else {
-            // Using highly superior mongoose
-            let newUser = new User({
-                username:req.body.username,
-                email:req.body.email,
-                password:req.body.password,
-            });
-            newUser.save(function(err,data){
-                if(err) console.log(err);
-                else console.log('Success:', data);
-            });
-        }
-        res.status(200).send();
+    check('username').isLength({ min: 3 }),
+    check('email').isEmail(),
+    check('password').isLength({ min: 8 }),
+    check('password-confirm').custom((value, {req, loc, path}) => {
+        if(value !== req.body.password) throw new Error("Passwords do not match");
+        return value;
+    })
+], (req, res) => {
+    const errors = validationResult(req);
+    console.log(errors.array());
+    res.status(200).send(errors.array());
 });
 
 // Upload page back-end
