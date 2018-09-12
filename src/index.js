@@ -98,9 +98,10 @@ app.get('/signup', (req, res) => {
 });
 
 app.post('/signup', [
-    check('username').isLength({ min: 3 }),
-    check('email').isEmail(),
-    check('password').isLength({ min: 8 }),
+    // Validation
+    check('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters!'),
+    check('email').isEmail().withMessage('Email must be a valid email'),
+    check('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters!'),
     check('password-confirm').custom((value, {req, loc, path}) => {
         if(value !== req.body.password) throw new Error("Passwords do not match");
         return value;
@@ -109,6 +110,16 @@ app.post('/signup', [
     const errors = validationResult(req);
     console.log(errors.array());
     res.status(200).send(errors.array());
+    // Using highly superior mongoose
+    let newUser = new User({
+        username:req.body.username,
+        email:req.body.email,
+        password:req.body.password,
+    });
+    newUser.save(function(err,data){
+        if(err) console.log(err);
+        else console.log('Success:', data);
+    });
 });
 
 // Upload page back-end
