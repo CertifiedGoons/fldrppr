@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include partials/head %>
+</head>
+<body>
+    <% include partials/navbar %>
+
+    <section class="hero is-danger">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    <%- error.code %>
+                </h1>
+                <h2 class="subtitle">
+                    <%- error.message %>
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <% include partials/footer %>
+</body>
+</html>

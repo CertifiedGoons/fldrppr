@@ -59,5 +59,12 @@ typings/
 
 # next.js build output
 .next
+
+# Visual Studio Code
 .vscode/
+
+# OLD files
 *.OLD
+
+# Production Code
+build/

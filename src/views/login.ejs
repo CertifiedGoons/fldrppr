@@ -6,11 +6,9 @@
 <body>
     <% include partials/navbar %>
 
-    <form action="/signup/new_account" method="POST">
-        Username:       <input type="text" name="username" /><br>
-        Email:          <input type="text" name="email" /><br>
+    <form action="/login" method="POST">
+        Username or Email:       <input type="text" name="user" /><br>
         Password:       <input type="password" name="password" /><br>
-        Password Again: <input type="password" name="password-confirm" /><br>
         <input type="submit" value="Submit" />
     </form>
 
