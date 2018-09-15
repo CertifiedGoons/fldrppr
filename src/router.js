@@ -16,6 +16,6 @@ module.exports = app => {
 
     // File Upload Controller
     app.get('/upload', fileUploadController.file_upload_get);
-    app.post('/upload', fileUploadController.file_upload_multer_middleware, fileUploadController.file_upload_post);
+    app.post('/upload', fileUploadController.file_upload_multer, fileUploadController.file_upload_post);
 
 }
