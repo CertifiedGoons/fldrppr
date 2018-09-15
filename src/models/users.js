@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 
 /**
  * TODO: Clean up schema
+ * TODO: Improve documentation
  */
 
 let newUserSchema = new mongoose.Schema({
