@@ -1,2 +1,10 @@
 require('babel-register');
+require('browser-sync')({
+    files: ['src/**/*.{html,js,css}'],
+    online: false,
+    open: false,
+    port: process.env.PORT + 1 || 8081,
+    proxy: 'localhost:' + (process.env.PORT || 8080),
+    ui: false
+});
 require('../src');

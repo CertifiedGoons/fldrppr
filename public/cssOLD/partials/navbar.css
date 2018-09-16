@@ -1,7 +1,0 @@
-nav {
-    user-select: none;
-}
-
-.navbar-brand > a:hover {
-    background-color: inherit !important;
-}
