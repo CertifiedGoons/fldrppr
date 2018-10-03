@@ -9,9 +9,9 @@
 import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
-import mongoose, { connection } from 'mongoose';
+import mongoose from 'mongoose';
 import multer from 'multer';
-import gridFsStorage from 'multer-gridfs-storage';
+import GridFSStorage from 'multer-gridfs-storage';
 
 const app = express();
 
@@ -21,13 +21,15 @@ app.listen(process.env.PORT || 8080, () => {
 
 // database connection
 const db = mongoose.connect(process.env.MONGO || 'mongodb://localhost:27017/fldrppr', { useNewUrlParser: true });
-const storage = new gridFsStorage({
-    db: db,
-    file: () => { return { bucketName: 'uploaded' } }
+const storage = new GridFSStorage({
+    db,
+    file() {
+        return { bucketName: 'uploaded' };
+    },
 });
-mongoose.connection.on('error', (err) => console.log('MongoDB connection error: ', err));
+mongoose.connection.on('error', err => console.log('MongoDB connection error: ', err));
 mongoose.connection.once('open', () => console.log('MongoDB connection successful'));
-exports.fileUploadStorage = multer({ storage: storage });
+exports.fileUploadStorage = multer({ storage });
 
 // defining middleware
 app.set('view engine', 'ejs');
