@@ -5,11 +5,12 @@
   "private": true,
   "scripts": {
     "start": "node bin/dev",
-    "dev": "nodemon -r dotenv/config -e \"sass\" --exec \"yarn run sass && yarn run start\"",
+    "dev": "nodemon -r dotenv/config -e \"sass\" --exec \"yarn run sass && yarn run lint && yarn run start\"",
     "sass": "node-sass src/sass -o public/css",
     "clean": "rm -rf dist",
     "build": "yarn run clean && mkdir dist && babel src -s -d dist && cp -r src/views dist/views && cp -r src/public dist/public",
-    "production": "yarn run build && node bin/production"
+    "production": "yarn run build && node bin/production",
+    "lint": "eslint ./src/**/*.js"
   },
   "repository": {
     "type": "git",
