@@ -1,11 +1,3 @@
-/**
- * TODO: Add winston middleware
- * TODO: Add ES-Lint
- * TODO: Implement express sessions
- * TODO: Sass support
- * ? Should we use JWT for auth handling?
- */
-
 import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';

@@ -1,7 +1,3 @@
-/**
- * Todo: Improve documentation
- */
-
 import httpStatus from 'http-status-codes';
 import { check, validationResult } from 'express-validator/check';
 import User from '../models/users';
