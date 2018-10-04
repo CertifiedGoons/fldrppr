@@ -34,7 +34,7 @@ exports.user_login_post = (req, res) => {
             }
         }
     });
-}
+};
 
 // Display signup page
 exports.user_signup_get = (req, res) => res.render('signup');
