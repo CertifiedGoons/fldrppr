@@ -2,8 +2,7 @@ import homeController from './controllers/home';
 import userController from './controllers/user';
 import fileUploadController from './controllers/fileUpload';
 
-module.exports = app => {
-
+module.exports = (app) => {
     // Home Controller
     app.get('/', homeController.Home);
 
@@ -17,5 +16,4 @@ module.exports = app => {
     // File Upload Controller
     app.get('/upload', fileUploadController.file_upload_get);
     app.post('/upload', fileUploadController.file_upload_multer, fileUploadController.file_upload_post);
-
-}
+};

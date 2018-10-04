@@ -5,11 +5,12 @@
   "private": true,
   "scripts": {
     "start": "node bin/dev",
-    "dev": "nodemon -r dotenv/config -e \"sass\" --exec \"yarn run sass && yarn run start\"",
+    "dev": "nodemon -r dotenv/config -e \"sass\" --exec \"yarn run sass && yarn run lint && yarn run start\"",
     "sass": "node-sass src/sass -o public/css",
     "clean": "rm -rf dist",
     "build": "yarn run clean && mkdir dist && babel src -s -d dist && cp -r src/views dist/views && cp -r src/public dist/public",
-    "production": "yarn run build && node bin/production"
+    "production": "yarn run build && node bin/production",
+    "lint": "eslint ./src/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,9 @@
     "babel-register": "^6.26.0",
     "bower": "^1.8.4",
     "browser-sync": "^2.24.7",
+    "eslint": "^5.6.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
     "node-sass": "^4.9.3",
     "nodemon": "^1.18.4",
     "yarn": "^1.9.4"

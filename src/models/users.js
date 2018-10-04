@@ -1,10 +1,6 @@
+/* eslint-disable*/
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-
-/**
- * TODO: Clean up schema
- * TODO: Improve documentation
- */
 
 let newUserSchema = new mongoose.Schema({
     username: String,
@@ -13,27 +9,25 @@ let newUserSchema = new mongoose.Schema({
     loginAttempts: {
         type: Number,
         required: true,
-        default: 0
+        default: 0,
     },
-    lockUnitl: { type: Number }
+    lockUnitl: { type: Number },
 });
 
 newUserSchema.statics.failedLogin = {
     NOT_FOUND: 0,
     PASSWORD_INCORRECT: 1,
-    MAX_ATTEMPTS: 2
+    MAX_ATTEMPTS: 2,
 };
-newUserSchema.virtual('isLocked').get(function() {
-    // check for a future lockUntil timestamp
-    return !!(this.lockUntil && this.lockUntil > Date.now());
-});
-newUserSchema.methods.comparePassword = function(candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+newUserSchema.virtual('isLocked').get(() => !!(this.lockUntil && this.lockUntil > Date.now()));
+
+newUserSchema.methods.comparePassword = (candidatePassword, cb) => {
+    bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
         if (err) return cb(err);
         cb(null, isMatch);
     });
 };
-newUserSchema.methods.incLoginAttempts = function(cb) {
+newUserSchema.methods.incLoginAttempts = (cb) => {
     // if we have a previous lock that has expired, restart at 1
     if (this.lockUntil && this.lockUntil < Date.now()) {
         return this.update({
@@ -42,7 +36,7 @@ newUserSchema.methods.incLoginAttempts = function(cb) {
         }, cb);
     }
     // otherwise we're incrementing
-    var updates = { $inc: { loginAttempts: 1 } };
+    const updates = { $inc: { loginAttempts: 1 } };
     // lock the account if we've reached max attempts and it's not locked already
     if (this.loginAttempts + 1 >= MAX_LOGIN_ATTEMPTS && !this.isLocked) {
         updates.$set = { lockUntil: Date.now() + LOCK_TIME };
@@ -51,8 +45,8 @@ newUserSchema.methods.incLoginAttempts = function(cb) {
 };
 const SALT_WORK_FACTOR = 10;
 // this is where the hash in the password is set up
-newUserSchema.pre('save', function(next){
-    var user = this;
+newUserSchema.pre('save', (next) => {
+    let user = this;
     if (!user.isModified('password')) return next();
  
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt){
