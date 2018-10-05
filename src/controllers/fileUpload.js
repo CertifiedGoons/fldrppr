@@ -1,5 +1,5 @@
 import httpStatus from 'http-status-codes';
-import { fileUploadStorage } from '../index'; // eslint-disable-line
+import { fileUploadStorage, logger } from '../index'; // eslint-disable-line
 
 // Display upload page
 exports.file_upload_get = (req, res) => res.render('upload');
@@ -9,6 +9,6 @@ exports.file_upload_multer = fileUploadStorage.single('file');
 
 // Response to file upload
 exports.file_upload_post = (req, res) => {
-    console.log(req.file);
+    logger.info(req.file);
     res.status(httpStatus.OK).send();
 };

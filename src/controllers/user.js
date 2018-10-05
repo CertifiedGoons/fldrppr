@@ -1,6 +1,7 @@
 import httpStatus from 'http-status-codes';
 import { check, validationResult } from 'express-validator/check';
 import User from '../models/users';
+import { logger } from '../index'; // eslint-disable-line
 
 // Display login page
 exports.user_login_get = (req, res) => res.render('login');
@@ -13,6 +14,7 @@ exports.user_login_post = (req, res) => {
         } else {
             if (user) {
                 res.status(httpStatus.OK).send('Login successful');
+                logger.info(`${req.body.user} logged in`);
                 return;
             }
             const reasons = User.failedLogin;
@@ -20,12 +22,15 @@ exports.user_login_post = (req, res) => {
             case reasons.NOT_FOUND:
             case reasons.PASSWORD_INCORRECT:
                 res.status(httpStatus.OK).send('Login failed. Username/email or password incorrect');
+                logger.info(`${req.body.user} failed to login`);
                 break;
             case reasons.MAX_ATTEMPTS:
                 res.status(httpStatus.OK).send('Account as been locked due to too many login attempts');
+                logger.info(`${req.body.user}'s account has been locked due to too many login attempts`);
                 break;
             default:
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).send();
+                logger.error('Internal server error while handling user login.');
                 break;
             }
         }
@@ -58,7 +63,7 @@ exports.user_signup_post = (req, res) => {
             password: req.body.password,
         })).save((err) => {
             if (err) {
-                console.log('Error saving new user to database: ', err);
+                logger.error(`Error saving new user to database: ${err}`);
                 res.status(httpStatus.INTERNAL_SERVER_ERROR).send();
             } else {
                 res.status(httpStatus.OK).send();
